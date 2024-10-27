@@ -1,6 +1,21 @@
 # pid_tracker
 Project Beta Adimaker 24/25
 
+## Objectifs
+But : Tracker laser autonome
+Objet à traquer : Tête
+
+## Prérequis
+- Python 3
+
+## Bibliothèques
+- Bibliothèques :
+  - `imutils`
+  - `opencv-python`
+ 
+```bash
+pip install imutils opencv-python
+```
 
 ## Arborescence du repository
 ```bash
@@ -19,14 +34,4 @@ Project Beta Adimaker 24/25
 #### Description
 `ObjCenter` est une classe Python conçue pour détecter des visages dans des images à l'aide de la bibliothèque OpenCV. Elle utilise un classificateur en cascade Haar pour identifier les visages et peut retourner les coordonnées du centre du visage détecté.
 
-#### Prérequis
-- Python 3.x
-- Bibliothèques :
-  - `imutils`
-  - `opencv-python`
 
-Installation des bibliothèques via pip :
-
-```bash
-pip install imutils opencv-python
-```
