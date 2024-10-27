@@ -10,9 +10,8 @@ Choix de l'équipe : zone du corps - main ou tête
 - Python 3
 
 ## Bibliothèques
-- Bibliothèques :
-  - `imutils`
-  - `opencv-python`
+- `imutils`
+- `opencv-python`
  
 ```bash
 pip install imutils opencv-python
