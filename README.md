@@ -2,8 +2,17 @@
 Project Beta Adimaker 24/25
 
 
-## Arborescence des Fichiers
-projet/ ├── README.md # Ce fichier ├── haarcascade_frontalface_default.xml # Classificateur Haar ├── pan_tilt_tracking.py # Fichier principal pour le suivi de la caméra └── pyImageSearch/ ├── init.py # Fichier d'initialisation du package ├── pycache/ # Dossier contenant les fichiers compilés ├── objCenter.py # Fichier contenant la classe ObjCenter └── pid.py # Fichier pour le contrôle PID
+## Arborescence du repository
+```bash
+├── README.md
+├── haarcascade_frontalface_default.xml
+├── pan_tilt_tracking.py
+└── pyImageSearch
+    ├── __init__.py
+    ├── __pycache__
+    ├── objCenter.py
+    └── pid.py
+```
 
 # ObjCenter - Détection de Visages avec OpenCV
 
