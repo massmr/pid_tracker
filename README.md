@@ -3,6 +3,7 @@ Project Beta Adimaker 24/25
 
 ## Objectifs
 But : Tracker laser autonome
+
 Objet à traquer : Tête
 
 ## Prérequis
