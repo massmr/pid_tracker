@@ -1,10 +1,10 @@
 # pid_tracker.py | projet pointeur rouge
 
 # Sommaire
-- [Introduction]
-- [Installation]
-- [Utilisation]
-- [Description des fichiers]
+- [Introduction](#Introduction)
+- [Installation](#Installation)
+- [Utilisation](#Utilisation)
+- [Description des fichiers](#Description_des_fichiers)
 
 # Introduction
 ## Présentation
@@ -35,6 +35,11 @@ Motorisation : 2* servos 9g;\
 Laser : diode laser;\
 Caméra : Pi caméra V2;\
 Articulation : Pan-tilt impression 3D.
+
+## Cloner le repository
+```bash
+git clone https://github/massmr/pid_tracker.git
+```
 
 ## Arborescence du repository
 ```bash
