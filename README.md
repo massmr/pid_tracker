@@ -4,7 +4,7 @@
 - [Introduction](#Introduction)
 - [Installation](#Installation)
 - [Utilisation](#Utilisation)
-- [Description des fichiers](#Description_des_fichiers)
+- [Description des fichiers](#Description)
 
 # Introduction
 ## Présentation
