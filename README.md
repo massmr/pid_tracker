@@ -1,47 +1,44 @@
-# pid_tracker
-Project Beta Adimaker 24/25 "pointeur rouge".
-
 # Présentation
 
 ## Introduction
 Le projet "pointeur rouge" a été réalisé dans le cadre de nos études.\
-Le projet s'inscrit dans le domaine de la robotique et de la computer vision.\
+Il s'inscrit dans le domaine de la robotique et de la computer vision.\
 Le but est de créer un pointeur laser qui puisse tracker un objet de notre choix
 de manière autonome.\
-L'objet à tracker est laissé libre afin que nous puissions explorer les
+L'objet à tracker est laissé libre. Ceci nous oblige à explorer les
 différentes solutions de computer vision.
 
 ## Objectifs
-Domaine : robotique - computer vision\
-But : tracker laser autonome\
-Objet à traquer : au choix de l'équipe\
+Domaine : robotique - computer vision;\
+But : tracker un objet par un laser de manière autonome;\
+Objet à traquer : au choix de l'équipe;\
 Décision de l'équipe : zone du corps - main ou tête : à adapter selon algorithme
-de computer vision
+de computer vision.
 
 ## Contraintes
-Budget limite : 150€
+Budget limite : 150€.
 
 # Hardware et matériel
 
 ## Hardware
-Système : Raspberry Pi 3, 4.\
+Système : Raspberry Pi 3, 4;\
 OS : Raspbery Pi OS.
 
 ## Matériel
-Motorisation : 2* servos 9g\
-Laser : diode laser\
-Caméra : Pi caméra V2\
-Articulation : Pan-tilt impression 3D
+Motorisation : 2* servos 9g;\
+Laser : diode laser;\
+Caméra : Pi caméra V2;\
+Articulation : Pan-tilt impression 3D.
 
 # Software
 
 ## Prérequis
-- Python 3
+- python3
 
 ## Bibliothèques nécessaires
-- `imutils` : Fournit des fonctions utilitaires pour manipuler les images et simplifier les opérations de traitement d'image avec OpenCV.
-- `opencv-python` : Utilisé pour le traitement d'image, la détection d'objets et d'autres tâches liées à la vision par ordinateur.
-- `pantilthat` (optionnel) : si un module Pan-Tilt Hat est utilisé pour contrôler la motorisation du laser, installer avec pip install pantilthat.
+- `imutils` : Fournit des fonctions utilitaires pour manipuler les images et simplifier les opérations de traitement d'image avec OpenCV;\
+- `opencv-python` : Utilisé pour le traitement d'image, la détection d'objets et d'autres tâches liées à la vision par ordinateur;\
+- `pantilthat` (optionnel) : si un module Pan-Tilt Hat est utilisé pour contrôler la motorisation du laser. Ici le hat est imprimé "maison", sans PCB, et ne nécessite pas de bibliothèque.
  
 ```bash
 pip install imutils opencv-python pantilthat
@@ -88,9 +85,9 @@ https://docs.opencv.org/3.4/d2/d99/tutorial_js_face_detection.html
 
 ### Fonctionnement 
 La classe suit le processus suivant :\
-Capture de Frame : Récupère la frame actuelle.\
-Détection des l’Objet : Utilise un classificateur en cascade (chargé depuis le fichier Haar) pour détecter les zones correspondant à l'objet.\ Si plusieurs objets sont detectés, celui présentant les plus grandes dimensions est isolé. Le postulat suivant est établi : objet le plus grand = objet le plus proche.\
-Calcul du Centre : Si un objet est détecté, il calcule et renvoie les coordonnées centrales.
+Capture de Frame : récupère la frame actuelle.\
+Détection des l’Objet : utilise un classificateur en cascade (chargé depuis le fichier Haar) pour détecter les zones correspondant à l'objet.\ Si plusieurs objets sont detectés, celui présentant les plus grandes dimensions est isolé. Le postulat suivant est établi : objet le plus grand = objet le plus proche.\
+Calcul du Centre : si un objet est détecté, il calcule et renvoie les coordonnées centrales.
 
 ### Utilisation
 Le fichier objCenter.py est appelé dans le script principal (pan_tilt_tracking.py), qui utilise la position du centre de l'objet pour diriger les servos de manière dynamique et ajuster la trajectoire du laser.
@@ -102,9 +99,9 @@ pid.py contient une classe de contrôleur PID (Proportionnel Intégral Dérivé)
 #### Fonctionnement
 Le PID ajuste la position selon trois composants :
 
-Proportionnel (P) : Ajuste proportionnellement à l'erreur actuelle (distance de l'objet par rapport au centre).\
-Intégral (I) : Cumul des erreurs passées pour réduire l'oscillation et atteindre une position stable.\
-Dérivé (D) : Tient compte de la variation de l'erreur pour anticiper les corrections nécessaires.
+Proportionnel (P) : ajuste proportionnellement à l'erreur actuelle (distance de l'objet par rapport au centre).\
+Intégral (I) : cumul des erreurs passées pour réduire l'oscillation et atteindre une position stable.\
+Dérivé (D) : tient compte de la variation de l'erreur pour anticiper les corrections nécessaires.
 
 #### Utilisation
 Le fichier est utilisé par le script principal pour appliquer la correction de position des servos en continu, en tenant compte des données fournies par objCenter.py.
@@ -118,8 +115,8 @@ pan_tilt_tracking.py est le script principal du projet qui orchestre le processu
 
 #### Fonctionnement
 
-Initialisation : Charge les bibliothèques, initialise les paramètres de suivi, et configure la caméra.\
-Détection de l’Objet : Récupère la frame de la caméra, détecte la position de l'objet avec objCenter.\
-Mise à Jour des Servos : Applique les corrections PID pour ajuster la position des servos.\
-Affichage Vidéo : Montre la vidéo en temps réel avec la zone de suivi.\
-Nettoyage : Ferme et libère les ressources à la fin.
+Initialisation : charge les bibliothèques, initialise les paramètres de suivi, et configure la caméra.\
+Détection de l’Objet : récupère la frame de la caméra, détecte la position de l'objet avec objCenter.\
+Mise à Jour des Servos : applique les corrections PID pour ajuster la position des servos.\
+Affichage Vidéo : montre la vidéo en temps réel avec la zone de suivi.\
+Nettoyage : ferme et libère les ressources à la fin.
