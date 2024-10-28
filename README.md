@@ -39,11 +39,12 @@ Articulation : Pan-tilt impression 3D
 - Python 3
 
 ## Bibliothèques nécessaires
-- `imutils`
-- `opencv-python`
+- `imutils` : Fournit des fonctions utilitaires pour manipuler les images et simplifier les opérations de traitement d'image avec OpenCV.
+- `opencv-python` : Utilisé pour le traitement d'image, la détection d'objets et d'autres tâches liées à la vision par ordinateur.
+- `pantilthat` (optionnel) : si un module Pan-Tilt Hat est utilisé pour contrôler la motorisation du laser, installer avec pip install pantilthat.
  
 ```bash
-pip install imutils opencv-python
+pip install imutils opencv-python pantilthat
 ```
 
 ## Arborescence du repository
@@ -60,7 +61,7 @@ pip install imutils opencv-python
 
 ## Description des fichiers
 
-### ** haarcascade_frontalface_default.xml ** - Algorithme de détection des visages
+### haarcascade_frontalface_default.xml - Algorithme de détection des visages
 #### Description
 `haarcascade_frontalface_default.xml` contient les paramètres d'un classificateur en cascade Haar spécialement entraîné pour la détection de visages dans des images. Il fait partie des outils d'OpenCV pour la vision par ordinateur et repose sur les caractéristiques haar : des motifs de luminosité permettant de détecter des formes distinctes (comme les yeux, le nez et la bouche) dans une région.
 
@@ -81,16 +82,44 @@ Ce fichier est chargé dans OpenCV pour initialiser un détecteur de visages, et
 #### Documentation
 https://docs.opencv.org/3.4/d2/d99/tutorial_js_face_detection.html
 
-### ** objCenter.py ** - Détection de Visages avec OpenCV
+### objCenter.py - Détection de Visages avec OpenCV
 #### Description
-`ObjCenter` est une classe Python conçue pour détecter des visages dans des images à l'aide de la bibliothèque OpenCV. Elle utilise un classificateur en cascade Haar pour identifier les visages et peut retourner les coordonnées du centre du visage détecté.
+`ObjCenter` est une classe Python conçue pour détecter un objet dans des frames à l'aide de la bibliothèque OpenCV. Ici, elle utilise un classificateur en cascade Haar pour identifier les visages et retourne les coordonnées du centre du visage détecté.
 
-### ** pid.py ** - Régulateur PID "Proportionnel Intégral Dérivé"
+### Fonctionnement 
+La classe suit le processus suivant :\
+Capture de Frame : Récupère la frame actuelle.\
+Détection des l’Objet : Utilise un classificateur en cascade (chargé depuis le fichier Haar) pour détecter les zones correspondant à l'objet.\ Si plusieurs objets sont detectés, celui présentant les plus grandes dimensions est isolé. Le postulat suivant est établi : objet le plus grand = objet le plus proche.\
+Calcul du Centre : Si un objet est détecté, il calcule et renvoie les coordonnées centrales.
+
+### Utilisation
+Le fichier objCenter.py est appelé dans le script principal (pan_tilt_tracking.py), qui utilise la position du centre de l'objet pour diriger les servos de manière dynamique et ajuster la trajectoire du laser.
+
+### pid.py - Régulateur PID "Proportionnel Intégral Dérivé"
 #### Description
+pid.py contient une classe de contrôleur PID (Proportionnel Intégral Dérivé) qui aide à stabiliser et à ajuster la position du laser pour suivre l'objet détecté de manière fluide. Le contrôleur PID corrige la position des servos en fonction des erreurs de position accumulées, permettant une réaction douce et progressive aux mouvements de l'objet suivi.
+
+#### Fonctionnement
+Le PID ajuste la position selon trois composants :
+
+Proportionnel (P) : Ajuste proportionnellement à l'erreur actuelle (distance de l'objet par rapport au centre).\
+Intégral (I) : Cumul des erreurs passées pour réduire l'oscillation et atteindre une position stable.\
+Dérivé (D) : Tient compte de la variation de l'erreur pour anticiper les corrections nécessaires.
+
+#### Utilisation
+Le fichier est utilisé par le script principal pour appliquer la correction de position des servos en continu, en tenant compte des données fournies par objCenter.py.
 
 #### Ressources utiles
 https://fr.wikipedia.org/wiki/R%C3%A9gulateur_PID
 
 ### pan_tilt_tracking.pyImageSearch
 #### Description
-Lorem Ipsum
+pan_tilt_tracking.py est le script principal du projet qui orchestre le processus complet de suivi de l’objet. Il initialise la caméra, configure les objets de détection et de PID, et met à jour la position des servos pour maintenir l’objet centré en continu.
+
+#### Fonctionnement
+
+Initialisation : Charge les bibliothèques, initialise les paramètres de suivi, et configure la caméra.\
+Détection de l’Objet : Récupère la frame de la caméra, détecte la position de l'objet avec objCenter.\
+Mise à Jour des Servos : Applique les corrections PID pour ajuster la position des servos.\
+Affichage Vidéo : Montre la vidéo en temps réel avec la zone de suivi.\
+Nettoyage : Ferme et libère les ressources à la fin.
