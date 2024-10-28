@@ -62,11 +62,12 @@ pip install imutils opencv-python
 
 ### haarcascade_frontalface_default.xml - Algorithme de détection des visages
 #### Description
-`haarcascade_frontalface_default.xml` contient les paramètres d'un classificateur en cascade Haar spécialement entraîné pour la détection de visages dans des images. Il fait partie des outils d'OpenCV pour la vision par ordinateur et repose sur les caractéristiques Haar : des motifs de luminosité permettant de détecter des formes distinctes (comme les yeux, le nez et la bouche) dans une région.
-Description Technique
+`haarcascade_frontalface_default.xml` contient les paramètres d'un classificateur en cascade Haar spécialement entraîné pour la détection de visages dans des images. Il fait partie des outils d'OpenCV pour la vision par ordinateur et repose sur les caractéristiques haar : des motifs de luminosité permettant de détecter des formes distinctes (comme les yeux, le nez et la bouche) dans une région.
 
 #### Avantages
 Détection rapide et efficace : la cascade de Haar est optimisée pour être rapide, en passant par une série de filtres de plus en plus précis.
+Calcul peu énergivore : permet d'éviter une surcharge au niveau du processeur
+du RPI 3, 4.
 
 #### Limites
 Ce modèle est sensible à l’orientation et à l'éclairage, ce qui signifie qu’il peut être moins efficace si les visages sont inclinés ou mal éclairés.
