@@ -97,11 +97,10 @@ Le fichier objCenter.py est appelé dans le script principal (pan_tilt_tracking.
 pid.py contient une classe de contrôleur PID (Proportionnel Intégral Dérivé) qui aide à stabiliser et à ajuster la position du laser pour suivre l'objet détecté de manière fluide. Le contrôleur PID corrige la position des servos en fonction des erreurs de position accumulées, permettant une réaction douce et progressive aux mouvements de l'objet suivi.
 
 #### Fonctionnement
-Le PID ajuste la position selon trois composants :
-
-Proportionnel (P) : ajuste proportionnellement à l'erreur actuelle (distance de l'objet par rapport au centre).\
-Intégral (I) : cumul des erreurs passées pour réduire l'oscillation et atteindre une position stable.\
-Dérivé (D) : tient compte de la variation de l'erreur pour anticiper les corrections nécessaires.
+Le PID ajuste la position selon trois composants :\
+- Proportionnel (P) : ajuste proportionnellement à l'erreur actuelle (distance de l'objet par rapport au centre);\
+- Intégral (I) : cumul des erreurs passées pour réduire l'oscillation et atteindre une position stable;\
+- Dérivé (D) : tient compte de la variation de l'erreur pour anticiper les corrections nécessaires.
 
 #### Utilisation
 Le fichier est utilisé par le script principal pour appliquer la correction de position des servos en continu, en tenant compte des données fournies par objCenter.py.
@@ -115,8 +114,8 @@ pan_tilt_tracking.py est le script principal du projet qui orchestre le processu
 
 #### Fonctionnement
 
-Initialisation : charge les bibliothèques, initialise les paramètres de suivi, et configure la caméra.\
-Détection de l’Objet : récupère la frame de la caméra, détecte la position de l'objet avec objCenter.\
-Mise à Jour des Servos : applique les corrections PID pour ajuster la position des servos.\
-Affichage Vidéo : montre la vidéo en temps réel avec la zone de suivi.\
-Nettoyage : ferme et libère les ressources à la fin.
+- Initialisation : charge les bibliothèques, initialise les paramètres de suivi, et configure la caméra.\
+- Détection de l’Objet : récupère la frame de la caméra, détecte la position de l'objet avec objCenter.\
+- Mise à Jour des Servos : applique les corrections PID pour ajuster la position des servos.\
+- Affichage Vidéo : montre la vidéo en temps réel avec la zone de suivi.\
+- Nettoyage : ferme et libère les ressources à la fin.
