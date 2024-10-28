@@ -16,10 +16,10 @@ Domaine : robotique - computer vision\
 But : tracker laser autonome\
 Objet à traquer : au choix de l'équipe\
 Décision de l'équipe : zone du corps - main ou tête : à adapter selon algorithme
-de computer vision\
+de computer vision
 
 ## Contraintes
-Budget limite : 150€\
+Budget limite : 150€
 
 # Hardware et matériel
 
@@ -31,16 +31,16 @@ OS : Raspbery Pi OS.
 Motorisation : 2* servos 9g\
 Laser : diode laser\
 Caméra : Pi caméra V2\
-Articulation : Pan-tilt impression\
+Articulation : Pan-tilt impression 3D
 
 # Software
 
 ## Prérequis
-- Python 3\
+- Python 3
 
 ## Bibliothèques nécessaires
-- `imutils`\
-- `opencv-python`\
+- `imutils`
+- `opencv-python`
  
 ```bash
 pip install imutils opencv-python
