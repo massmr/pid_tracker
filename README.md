@@ -60,7 +60,7 @@ pip install imutils opencv-python
 
 ## Description des fichiers
 
-### haarcascade_frontalface_default.xml - Algorithme de détection des visages
+### ** haarcascade_frontalface_default.xml ** - Algorithme de détection des visages
 #### Description
 `haarcascade_frontalface_default.xml` contient les paramètres d'un classificateur en cascade Haar spécialement entraîné pour la détection de visages dans des images. Il fait partie des outils d'OpenCV pour la vision par ordinateur et repose sur les caractéristiques haar : des motifs de luminosité permettant de détecter des formes distinctes (comme les yeux, le nez et la bouche) dans une région.
 
@@ -81,11 +81,11 @@ Ce fichier est chargé dans OpenCV pour initialiser un détecteur de visages, et
 #### Documentation
 https://docs.opencv.org/3.4/d2/d99/tutorial_js_face_detection.html
 
-### objCenter.py - Détection de Visages avec OpenCV
+### ** objCenter.py ** - Détection de Visages avec OpenCV
 #### Description
 `ObjCenter` est une classe Python conçue pour détecter des visages dans des images à l'aide de la bibliothèque OpenCV. Elle utilise un classificateur en cascade Haar pour identifier les visages et peut retourner les coordonnées du centre du visage détecté.
 
-### pid.py - Régulateur PID "Proportionnel Intégral Dérivé"
+### ** pid.py ** - Régulateur PID "Proportionnel Intégral Dérivé"
 #### Description
 
 #### Ressources utiles

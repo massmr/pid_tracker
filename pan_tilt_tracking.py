@@ -29,8 +29,10 @@ def obj_center(args, objX, objY, centerX, centerY):
 	signal.signal(signal.SIGINT, signal_handler)
 	# start the video stream and wait for the camera to warm up
 	#vs = VideoStream(usePiCamera=True).start()
+    # src=0 is for self webcam
 	vs = VideoStream(src=0).start()
-	time.sleep(2.0)
+    # pre-heat picamera V2
+	#time.sleep(2.0)
 	# initialize the object center finder
 	obj = ObjCenter(args["cascade"])
 	# loop indefinitely
@@ -72,6 +74,7 @@ def pid_process(output, p, i, d, objCoord, centerCoord):
 def in_range(val, start, end):
 	# determine the input value is in the supplied range
 	return (val >= start and val <= end)
+
 def set_servos(pan, tlt):
 	# signal trap to handle keyboard interrupt
 	signal.signal(signal.SIGINT, signal_handler)
