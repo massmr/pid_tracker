@@ -36,8 +36,8 @@ Articulation : Pan-tilt impression 3D.
 - python3
 
 ## Bibliothèques nécessaires
-- `imutils` : Fournit des fonctions utilitaires pour manipuler les images et simplifier les opérations de traitement d'image avec OpenCV;\
-- `opencv-python` : Utilisé pour le traitement d'image, la détection d'objets et d'autres tâches liées à la vision par ordinateur;\
+- `imutils` : Fournit des fonctions utilitaires pour manipuler les images et simplifier les opérations de traitement d'image avec OpenCV;
+- `opencv-python` : Utilisé pour le traitement d'image, la détection d'objets et d'autres tâches liées à la vision par ordinateur;
 - `pantilthat` (optionnel) : si un module Pan-Tilt Hat est utilisé pour contrôler la motorisation du laser. Ici le hat est imprimé "maison", sans PCB, et ne nécessite pas de bibliothèque.
  
 ```bash
@@ -85,8 +85,8 @@ https://docs.opencv.org/3.4/d2/d99/tutorial_js_face_detection.html
 
 ### Fonctionnement 
 La classe suit le processus suivant :
-- Capture de Frame : récupère la frame actuelle.\
-- Détection des l’Objet : utilise un classificateur en cascade (chargé depuis le fichier Haar) pour détecter les zones correspondant à l'objet. Si plusieurs objets sont detectés, celui présentant les plus grandes dimensions est isolé. Le postulat suivant est établi : objet le plus grand = objet le plus proche.\
+- Capture de Frame : récupère la frame actuelle.
+- Détection des l’Objet : utilise un classificateur en cascade (chargé depuis le fichier Haar) pour détecter les zones correspondant à l'objet. Si plusieurs objets sont detectés, celui présentant les plus grandes dimensions est isolé. Le postulat suivant est établi : objet le plus grand = objet le plus proche.
 - Calcul du Centre : si un objet est détecté, il calcule et renvoie les coordonnées centrales.
 
 ### Utilisation
@@ -98,8 +98,8 @@ pid.py contient une classe de contrôleur PID (Proportionnel Intégral Dérivé)
 
 #### Fonctionnement
 Le PID ajuste la position selon trois composants :
-- Proportionnel (P) : ajuste proportionnellement à l'erreur actuelle (distance de l'objet par rapport au centre);\
-- Intégral (I) : cumul des erreurs passées pour réduire l'oscillation et atteindre une position stable;\
+- Proportionnel (P) : ajuste proportionnellement à l'erreur actuelle (distance de l'objet par rapport au centre);
+- Intégral (I) : cumul des erreurs passées pour réduire l'oscillation et atteindre une position stable;
 - Dérivé (D) : tient compte de la variation de l'erreur pour anticiper les corrections nécessaires.
 
 #### Utilisation
@@ -114,8 +114,8 @@ pan_tilt_tracking.py est le script principal du projet qui orchestre le processu
 
 #### Fonctionnement
 
-- Initialisation : charge les bibliothèques, initialise les paramètres de suivi, et configure la caméra.\
-- Détection de l’Objet : récupère la frame de la caméra, détecte la position de l'objet avec objCenter.\
-- Mise à Jour des Servos : applique les corrections PID pour ajuster la position des servos.\
-- Affichage Vidéo : montre la vidéo en temps réel avec la zone de suivi.\
+- Initialisation : charge les bibliothèques, initialise les paramètres de suivi, et configure la caméra.
+- Détection de l’Objet : récupère la frame de la caméra, détecte la position de l'objet avec objCenter.
+- Mise à Jour des Servos : applique les corrections PID pour ajuster la position des servos.
+- Affichage Vidéo : montre la vidéo en temps réel avec la zone de suivi.
 - Nettoyage : ferme et libère les ressources à la fin.
