@@ -1,6 +1,7 @@
 # Présentation
 
 ## Introduction
+### Présentation
 Le projet "pointeur rouge" a été réalisé dans le cadre de nos études.\
 Il s'inscrit dans le domaine de la robotique et de la computer vision.\
 Le but est de créer un pointeur laser qui puisse tracker un objet de notre choix
@@ -8,16 +9,21 @@ de manière autonome.\
 L'objet à tracker est laissé libre. Ceci nous oblige à explorer les
 différentes solutions de computer vision.
 
-## Objectifs
+### Objectifs
 Domaine : robotique - computer vision;\
 But : tracker un objet par un laser de manière autonome;\
 Objet à traquer : au choix de l'équipe;\
 Décision de l'équipe : zone du corps - main ou tête : à adapter selon algorithme
 de computer vision.
 
-## Contraintes
+### Contraintes
 Budget limite : 150€.
 
+# Utilisation
+## Lancement du programme
+```bash
+python3 pan_tilt_tracking.py [-c !ou! --cascade] [path_to_haar_file]
+```
 # Hardware et matériel
 
 ## Hardware
