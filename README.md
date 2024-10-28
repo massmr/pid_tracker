@@ -84,10 +84,10 @@ https://docs.opencv.org/3.4/d2/d99/tutorial_js_face_detection.html
 `ObjCenter` est une classe Python conçue pour détecter un objet dans des frames à l'aide de la bibliothèque OpenCV. Ici, elle utilise un classificateur en cascade Haar pour identifier les visages et retourne les coordonnées du centre du visage détecté.
 
 ### Fonctionnement 
-La classe suit le processus suivant :\
-Capture de Frame : récupère la frame actuelle.\
-Détection des l’Objet : utilise un classificateur en cascade (chargé depuis le fichier Haar) pour détecter les zones correspondant à l'objet.\ Si plusieurs objets sont detectés, celui présentant les plus grandes dimensions est isolé. Le postulat suivant est établi : objet le plus grand = objet le plus proche.\
-Calcul du Centre : si un objet est détecté, il calcule et renvoie les coordonnées centrales.
+La classe suit le processus suivant :
+- Capture de Frame : récupère la frame actuelle.\
+- Détection des l’Objet : utilise un classificateur en cascade (chargé depuis le fichier Haar) pour détecter les zones correspondant à l'objet. Si plusieurs objets sont detectés, celui présentant les plus grandes dimensions est isolé. Le postulat suivant est établi : objet le plus grand = objet le plus proche.\
+- Calcul du Centre : si un objet est détecté, il calcule et renvoie les coordonnées centrales.
 
 ### Utilisation
 Le fichier objCenter.py est appelé dans le script principal (pan_tilt_tracking.py), qui utilise la position du centre de l'objet pour diriger les servos de manière dynamique et ajuster la trajectoire du laser.
@@ -97,7 +97,7 @@ Le fichier objCenter.py est appelé dans le script principal (pan_tilt_tracking.
 pid.py contient une classe de contrôleur PID (Proportionnel Intégral Dérivé) qui aide à stabiliser et à ajuster la position du laser pour suivre l'objet détecté de manière fluide. Le contrôleur PID corrige la position des servos en fonction des erreurs de position accumulées, permettant une réaction douce et progressive aux mouvements de l'objet suivi.
 
 #### Fonctionnement
-Le PID ajuste la position selon trois composants :\
+Le PID ajuste la position selon trois composants :
 - Proportionnel (P) : ajuste proportionnellement à l'erreur actuelle (distance de l'objet par rapport au centre);\
 - Intégral (I) : cumul des erreurs passées pour réduire l'oscillation et atteindre une position stable;\
 - Dérivé (D) : tient compte de la variation de l'erreur pour anticiper les corrections nécessaires.
