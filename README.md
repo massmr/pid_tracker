@@ -4,10 +4,10 @@ Project Beta Adimaker 24/25 "pointeur rouge".
 # Présentation
 
 ## Introduction
-Le projet "pointeur rouge" a été réalisé dans le cadre de nos études.
-Le projet s'inscrit dans le domaine de la robotique.
+Le projet "pointeur rouge" a été réalisé dans le cadre de nos études.\
+Le projet s'inscrit dans le domaine de la robotique et de la computer vision.\
 Le but est de créer un pointeur laser qui puisse tracker un objet de notre choix
-de manière autonome.
+de manière autonome.\
 L'objet à tracker est laissé libre afin que nous puissions explorer les
 différentes solutions de computer vision.
 
@@ -16,31 +16,31 @@ Domaine : robotique - computer vision\
 But : tracker laser autonome\
 Objet à traquer : au choix de l'équipe\
 Décision de l'équipe : zone du corps - main ou tête : à adapter selon algorithme
-de computer vision
+de computer vision\
 
 ## Contraintes
-Budget limite : 150€
+Budget limite : 150€\
 
 # Hardware et matériel
 
 ## Hardware
-Système : Raspberry Pi 3, 4.
+Système : Raspberry Pi 3, 4.\
 OS : Raspbery Pi OS.
 
 ## Matériel
-Motorisation : 2* servos 9g
-Laser : diode laser
-Caméra : Pi caméra V2
-Articulation : Pan-tilt impression
+Motorisation : 2* servos 9g\
+Laser : diode laser\
+Caméra : Pi caméra V2\
+Articulation : Pan-tilt impression\
 
 # Software
 
 ## Prérequis
-- Python 3
+- Python 3\
 
 ## Bibliothèques nécessaires
-- `imutils`
-- `opencv-python`
+- `imutils`\
+- `opencv-python`\
  
 ```bash
 pip install imutils opencv-python
