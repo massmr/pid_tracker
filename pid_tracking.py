@@ -33,7 +33,7 @@ def obj_center(args, objX, objY, centerX, centerY):
     signal.signal(signal.SIGINT, signal_handler)
     # Start the videostream
     # For PiCamera v2
-    #vs = cv2.VideoCapture("/dev/video1")
+    #vs = cv2.VideoCapture("/dev/video0")
     # For TCP video stream
     vs = cv2.VideoCapture("tcp://localhost:8554")
     if not vs.isOpened():
@@ -169,15 +169,15 @@ if __name__ == "__main__":
         
         # Start all 4 processes
         processObjectCenter.start()
-        #processPanning.start()
-        #processTilting.start()
-        #processSetServos.start()
+        processPanning.start()
+        processTilting.start()
+        processSetServos.start()
         
         # Join all 4 processes
         processObjectCenter.join()
-        #processPanning.join()
-        #processTilting.join()
-        #processSetServos.join()
+        processPanning.join()
+        processTilting.join()
+        processSetServos.join()
         
         # Disable the servos
         #pth.servo_enable(1, False)
