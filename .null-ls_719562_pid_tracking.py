@@ -106,31 +106,14 @@ def set_servos(pan, tlt):
 
     while True:
         # Convert pan/tilt angles to PWM values
-        #pan_pulse = int(SERVO_MIN + (SERVO_MAX - SERVO_MIN) * (pan.value + 90) / 180)
-        #tilt_pulse = int(SERVO_MIN + (SERVO_MAX - SERVO_MIN) * (tlt.value + 90) / 180)
-        #pan_pulse = max(SERVO_MIN, min(SERVO_MAX, pan_pulse))
-        #tilt_pulse = max(SERVO_MIN, min(SERVO_MAX, tilt_pulse))
-        
-        # Set servo angles
-        #pca.channels[0].duty_cycle = pan_pulse
-        #pca.channels[1].duty_cycle = tilt_pulse
-
-
-        # Conversion de l'angle pour duty_cycle, et limité à la plage [0, 65535]
         pan_pulse = int(SERVO_MIN + (SERVO_MAX - SERVO_MIN) * (pan.value + 90) / 180)
         tilt_pulse = int(SERVO_MIN + (SERVO_MAX - SERVO_MIN) * (tlt.value + 90) / 180)
-
-        # Ajuster pour duty_cycle PCA9685 [0 - 65535]
-        pan_duty_cycle = int(pan_pulse * (65535 / SERVO_MAX))
-        tilt_duty_cycle = int(tilt_pulse * (65535 / SERVO_MAX))
-
-        # Limiter à la plage de [0, 65535]
-        pan_duty_cycle = max(0, min(65535, pan_duty_cycle))
-        tilt_duty_cycle = max(0, min(65535, tilt_duty_cycle))
-
-        # Appliquer aux canaux de servo
-        pca.channels[0].duty_cycle = pan_duty_cycle
-        pca.channels[1].duty_cycle = tilt_duty_cycle
+        pan_pulse = max(SERVO_MIN, min(SERVO_MAX, pan_pulse))
+        tilt_pulse = max(SERVO_MIN, min(SERVO_MAX, tilt_pulse))
+        
+        # Set servo angles
+        pca.channels[0].duty_cycle = pan_pulse
+        pca.channels[1].duty_cycle = tilt_pulse
         time.sleep(0.05)
 
 # Check to see if this is the main body of execution
