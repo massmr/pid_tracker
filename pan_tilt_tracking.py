@@ -5,6 +5,10 @@ from imutils.video import VideoStream
 from pyImageSearch.objCenter import ObjCenter
 from pyImageSearch.pid import PID
 #import pantilthat as pth
+import board
+import busio
+from adafruit_pca9685 import PCA9685
+from adafruit_pca9685 import PCA9685
 import argparse
 import signal
 import time
@@ -12,6 +16,8 @@ import sys
 import cv2
 
 # define the range for the motors
+SERVO_MIN = 150
+SERVO_MAX = 600
 servoRange = (-90, 90)
 
 # function to handle keyboard interrupt
@@ -77,18 +83,34 @@ def in_range(val, start, end):
 
 def set_servos(pan, tlt):
 	# signal trap to handle keyboard interrupt
-	signal.signal(signal.SIGINT, signal_handler)
+	#signal.signal(signal.SIGINT, signal_handler)
 	# loop indefinitely
-	while True:
+	#while True:
 		# the pan and tilt angles are reversed
-		panAngle = -1 * pan.value
-		tiltAngle = -1 * tlt.value
+		#panAngle = -1 * pan.value
+		#tiltAngle = -1 * tlt.value
 		# if the pan angle is within the range, pan
-		if in_range(panAngle, servoRange[0], servoRange[1]):
-			pth.pan(panAngle)
+		#if in_range(panAngle, servoRange[0], servoRange[1]):
+		#	pth.pan(panAngle)
 		# if the tilt angle is within the range, tilt
-		if in_range(tiltAngle, servoRange[0], servoRange[1]):
-			pth.tilt(tiltAngle)
+		#if in_range(tiltAngle, servoRange[0], servoRange[1]):
+		#	pth.tilt(tiltAngle)
+    
+    # Initialize I2C and PCA9685
+    i2c = busio.I2C(board.SCL, board.SDA)
+    pca = PCA9685(i2c)
+    pca.frequency = 50
+    signal.signal(signal.SIGINT, signal_handler)
+    while True:
+        # Convert pan/tilt angles to PWM values
+        pan_pulse = int(SERVO_MIN + (SERVO_MAX - SERVO_MIN) * (pan.value + 90) / 180)
+        tilt_pulse = int(SERVO_MIN + (SERVO_MAX - SERVO_MIN) * (tlt.value + 90) / 180)
+        pan_pulse = max(SERVO_MIN, min(SERVO_MAX, pan_pulse))
+        tilt_pulse = max(SERVO_MIN, min(SERVO_MAX, tilt_pulse))
+        # Set servo angles
+        pca.channels[0].duty_cycle = pan_pulse
+        pca.channels[1].duty_cycle = tilt_pulse
+        time.sleep(0.05)
 
 # check to see if this is the main body of execution
 if __name__ == "__main__":
