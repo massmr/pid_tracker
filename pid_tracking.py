@@ -12,6 +12,8 @@ import signal
 import time
 import sys
 import cv2
+import subprocess
+import numpy as np
 
 # Define the range for the motors
 SERVO_MIN = 150
@@ -28,19 +30,25 @@ def signal_handler(sig, frame):
     # Exit
     sys.exit()
 
+def capture_frame(interval=0.2):
+    cmd = "libcamera-still -o - --width 640 --height 480 --timeout 1"
+    result = subprocess.run(cmd, shell=True, capture_output=True)
+    frame = np.frombuffer(result.stdout, dtype=np.uint8)
+    return cv2.imdecode(frame, cv2.IMREAD_COLOR)
+
 def obj_center(args, objX, objY, centerX, centerY):
     # Signal trap to handle keyboard interrupt
     signal.signal(signal.SIGINT, signal_handler)
     # Start the videostream
     # For PiCamera v2
-    #vs = cv2.VideoCapture("/dev/video0")
+    # vs = cv2.VideoCapture("/dev/video0", cv2.CAP_V4L2)
     # For TCP video stream
-    vs = cv2.VideoCapture("tcp://localhost:8554")
-    if not vs.isOpened():
-        print("[ERROR] Unable to open video stream.")
-        sys.exit(1)
-    vs.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-    vs.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+    #vs = cv2.VideoCapture("tcp://localhost:8554")
+    #if not vs.isOpened():
+    #    print("[ERROR] Unable to open video stream.")
+    #    sys.exit(1)
+    #vs.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+    #vs.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
     # For self webcam
     #vs = VideoStream(src=0).start()
     # pre-heat picamera V2
@@ -53,9 +61,9 @@ def obj_center(args, objX, objY, centerX, centerY):
     while True:
         # Grab the frame from the threaded video stream and flip it
         # vertically (since our camera was upside down)
-        ret, frame = vs.read()
+        #ret, frame = vs.read()
         # frame = cv2.flip(frame, 0)
-        
+        frame = capture_frame()
         # Calculate the center of the frame as this is where we will
         # try to keep the object
         (H, W) = frame.shape[:2]
