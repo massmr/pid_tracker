@@ -72,7 +72,7 @@ def obj_center(args, objX, objY, centerX, centerY):
         
         # For video stream
         frame = capture_frame()
-        frame = cv2.flip(frame, 0)
+        frame = cv2.flip(frame, 1)
         
         # Calculate the center of the frame as this is where we will
         # try to keep the object
@@ -139,8 +139,8 @@ def set_servos(pan, tlt):
         tilt_pulse = int(SERVO_MIN + (SERVO_MAX - SERVO_MIN) * (tlt.value + 90) / 180)
 
         # Limiter à la plage de [0, 4095]
-        pan_duty_cycle = max(0, min(4095, pan_duty_cycle))
-        tilt_duty_cycle = max(0, min(4095, tilt_duty_cycle))
+        pan_duty_cycle = max(0, min(4095, pan_pulse))
+        tilt_duty_cycle = max(0, min(4095, tilt_pulse))
 
         # Appliquer aux canaux de servo
         pca.channels[0].duty_cycle = pan_duty_cycle
