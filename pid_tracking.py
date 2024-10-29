@@ -134,7 +134,7 @@ def set_servos(pan, tlt):
         #pca.channels[1].duty_cycle = tilt_pulse
 
 
-        # Conversion de l'angle en PWM
+        # Conversion de l'angle en PWM pour servos
         pan_pulse = int(SERVO_MIN + (SERVO_MAX - SERVO_MIN) * (pan.value + 90) / 180)
         tilt_pulse = int(SERVO_MIN + (SERVO_MAX - SERVO_MIN) * (tlt.value + 90) / 180)
 
