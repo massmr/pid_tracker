@@ -33,15 +33,15 @@ def signal_handler(sig, frame):
 def obj_center(args, objX, objY, centerX, centerY):
 	# signal trap to handle keyboard interrupt
 	signal.signal(signal.SIGINT, signal_handler)
-    vs = cv2.VideoCapture("/dev/video0")  # Adjust this path if needed
-    if not vs.isOpened():
-        print("[ERROR] Unable to open video stream.")
-        sys.exit(1)
+   	vs = cv2.VideoCapture("/dev/video0")
+    	if not vs.isOpened():
+        	print("[ERROR] Unable to open video stream.")
+        	sys.exit(1)
 	# start the video stream and wait for the camera to warm up
 	#vs = VideoStream(usePiCamera=True).start()
-    # src=0 is for self webcam
+   	# src=0 is for self webcam
 	#vs = VideoStream(src=0).start()
-    # pre-heat picamera V2
+    	# pre-heat picamera V2
 	#time.sleep(2.0)
 	# initialize the object center finder
 	obj = ObjCenter(args["cascade"])
