@@ -20,6 +20,7 @@ import numpy as np
 # PWM is ranged [0, 4095] : 600 = 180°
 #SERVO_MIN = 150
 #SERVO_MAX = 600
+pwm = PCA9685()
 
 # Function to handle keyboard interrupt
 def signal_handler(sig, frame):
@@ -122,7 +123,6 @@ def set_servos(pan, tlt):
     
     # Init servos
     servoRange = (0, 180)
-    pwm = PCA9685()
 
     try:
         pwm.setPWMFreq(50)
