@@ -27,7 +27,7 @@ Budget limite : 150€.
 
 # Installation
 ## Hardware
-Système : Raspberry Pi 3, 4;\
+Ordinateur : Raspberry Pi 3, 4;\
 Controle des moteurs : Module PCA9685;\
 OS : Raspbery Pi OS.
 
@@ -53,6 +53,7 @@ git clone git@github.com:massmr/pid_tracker.git
     ├── objCenter.py
     └── pid.py
 ```
+Les fichiers supplementaires sont présents pour la phase de developpement.
 
 ## Prérequis
 - python3
@@ -127,7 +128,7 @@ https://fr.wikipedia.org/wiki/R%C3%A9gulateur_PID
 
 ## pid_tracking.py - main script
 ### Description
-pan_tilt_tracking.py est le script principal du projet qui orchestre le processus complet de suivi de l’objet. Il initialise la caméra, configure les objets de détection et de PID, et met à jour la position des servos pour maintenir l’objet centré en continu.
+pid_tracking.py est le script principal du projet qui orchestre le processus complet de suivi de l’objet. Il initialise la caméra, configure les objets de détection et de PID, et met à jour la position des servos pour maintenir l’objet centré en continu.
 
 ### Fonctionnement
 
