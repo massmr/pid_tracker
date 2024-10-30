@@ -3,10 +3,11 @@ from multiprocessing import Manager, Process
 from imutils.video import VideoStream
 from classes.objCenter import ObjCenter
 from classes.pid import PID
-import board
-import busio
+#import board
+#import busio
 import RPi.GPIO as GPIO
-from adafruit_pca9685 import PCA9685
+#from adafruit_pca9685 import PCA9685
+from PCA9685 import PCA9685
 import argparse
 import signal
 import time
