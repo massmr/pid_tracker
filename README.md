@@ -108,7 +108,7 @@ La classe suit le processus suivant :
 - Calcul du Centre : si un objet est détecté, il calcule et renvoie les coordonnées centrales.
 
 ### Utilisation
-Le fichier objCenter.py est appelé dans le script principal (pan_tilt_tracking.py), qui utilise la position du centre de l'objet pour diriger les servos de manière dynamique et ajuster la trajectoire du laser.
+Le fichier objCenter.py est appelé dans le script principal (pid_tracking.py), qui utilise la position du centre de l'objet pour diriger les servos de manière dynamique et ajuster la trajectoire du laser.
 
 ## pid.py - Régulateur PID "Proportionnel Intégral Dérivé"
 ### Description
@@ -121,7 +121,7 @@ Le PID ajuste la position selon trois composants :
 - Dérivé (D) : tient compte de la variation de l'erreur pour anticiper les corrections nécessaires.
 
 ### Utilisation
-Le fichier est utilisé par le script principal pour appliquer la correction de position des servos en continu, en tenant compte des données fournies par objCenter.py.
+Le fichier est utilisé par le script principal (pid_tracking.py) pour appliquer la correction de position des servos en continu, en tenant compte des données fournies par objCenter.py.
 
 ### Ressources utiles
 https://fr.wikipedia.org/wiki/R%C3%A9gulateur_PID
