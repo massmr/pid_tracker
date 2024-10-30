@@ -38,7 +38,7 @@ Articulation : Pan-tilt impression 3D.
 
 ## Cloner le repository
 ```bash
-git clone https://github/massmr/pid_tracker.git
+git clone git@github.com:massmr/pid_tracker.git
 ```
 
 ## Arborescence du repository
@@ -46,7 +46,7 @@ git clone https://github/massmr/pid_tracker.git
 ├── README.md
 ├── haarcascade_frontalface_default.xml
 ├── pid_tracking.py
-└── pyImageSearch
+└── classes
     ├── __init__.py
     ├── __pycache__
     ├── objCenter.py
