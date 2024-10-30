@@ -16,9 +16,8 @@ import numpy as np
 
 # Define the range for the motors
 # PWM is ranged [0, 4095] : 600 = 180°
-SERVO_MIN = 150
-SERVO_MAX = 600
-servoRange = (-90, 90)
+#SERVO_MIN = 150
+#SERVO_MAX = 600
 
 # Function to handle keyboard interrupt
 def signal_handler(sig, frame):
@@ -109,32 +108,28 @@ def in_range(val, start, end):
     # Determine the input value is in the supplied range
     return (val >= start and val <= end)
 
+def set_servo_pan(angle):
+    pwm.setRotationAngle(1, angle)
+
+def set_servo_tilt(angle):
+    pwm.setRotationAngle(0, angle)
+
 def set_servos(pan, tlt):
     # Signal trap to handle keyboard interrupt
     signal.signal(signal.SIGINT, signal_handler)
     
-    # Initialize I2C and PCA9685
-    i2c = busio.I2C(board.SCL, board.SDA)
-    pca = PCA9685(i2c)
-    pca.frequency = 50
-    signal.signal(signal.SIGINT, signal_handler)
-    
-    try: 
+    # Init servos
+    servoRange = (0, 180)
+    pwm = PCA9685()
+
+    try:
+        pwm.setPWMFreq(50)
+
         while True:
-            # Convert angles to PWM values
-            pan_pulse = int(SERVO_MIN + (SERVO_MAX - SERVO_MIN) * (pan.value + 90) / 180)
-            tilt_pulse = int(SERVO_MIN + (SERVO_MAX - SERVO_MIN) * (tlt.value + 90) / 180)
-
-            # PWM must is ranged : [0, 4095]
-            pan_duty_cycle = max(0, min(4095, pan_pulse))
-            tilt_duty_cycle = max(0, min(4095, tilt_pulse))
-
-            # Send to servos
-            pca.channels[0].duty_cycle = pan_duty_cycle
-            pca.channels[1].duty_cycle = tilt_duty_cycle
-            time.sleep(0.05)
-    finally:
-        pca.deinit()
+            if in_range(pan.value, servoRange[0], servoRange[1]):
+                set_servo_pan(pan.value)
+            if in_range(tlt.value, servoRange[0], servoRange[1]):
+                set_servo_tilt(tlt.value)
 
 # Check to see if this is the main body of execution
 if __name__ == "__main__":
