@@ -130,6 +130,12 @@ def set_servos(pan, tlt):
                 set_servo_pan(pan.value)
             if in_range(tlt.value, servoRange[0], servoRange[1]):
                 set_servo_tilt(tlt.value)
+    except Exception as e:
+        print(f"[ERROR] An error occurred: {e}")
+    finally:
+        pwm.deinit()
+        print("[INFO] PCA9685 PWM stopped")
+
 
 # Check to see if this is the main body of execution
 if __name__ == "__main__":
