@@ -118,20 +118,23 @@ def set_servos(pan, tlt):
     pca = PCA9685(i2c)
     pca.frequency = 50
     signal.signal(signal.SIGINT, signal_handler)
+    
+    try: 
+        while True:
+            # Convert angles to PWM values
+            pan_pulse = int(SERVO_MIN + (SERVO_MAX - SERVO_MIN) * (pan.value + 90) / 180)
+            tilt_pulse = int(SERVO_MIN + (SERVO_MAX - SERVO_MIN) * (tlt.value + 90) / 180)
 
-    while True:
-        # Convert angles to PWM values
-        pan_pulse = int(SERVO_MIN + (SERVO_MAX - SERVO_MIN) * (pan.value + 90) / 180)
-        tilt_pulse = int(SERVO_MIN + (SERVO_MAX - SERVO_MIN) * (tlt.value + 90) / 180)
+            # PWM must is ranged : [0, 4095]
+            pan_duty_cycle = max(0, min(4095, pan_pulse))
+            tilt_duty_cycle = max(0, min(4095, tilt_pulse))
 
-        # PWM must is ranged : [0, 4095]
-        pan_duty_cycle = max(0, min(4095, pan_pulse))
-        tilt_duty_cycle = max(0, min(4095, tilt_pulse))
-
-        # Send to servos
-        pca.channels[0].duty_cycle = pan_duty_cycle
-        pca.channels[1].duty_cycle = tilt_duty_cycle
-        time.sleep(0.05)
+            # Send to servos
+            pca.channels[0].duty_cycle = pan_duty_cycle
+            pca.channels[1].duty_cycle = tilt_duty_cycle
+            time.sleep(0.05)
+    finally:
+        pca.deinit()
 
 # Check to see if this is the main body of execution
 if __name__ == "__main__":
