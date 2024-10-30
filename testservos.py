@@ -5,15 +5,15 @@ from adafruit_pca9685 import PCA9685
 import time
 
 # Définir les valeurs minimales et maximales pour les servos
-SERVO_MIN = 150
-SERVO_MAX = 600
+SERVO_MIN = 0
+SERVO_MAX = 4095
 
 # Fonction pour convertir un angle en impulsion PWM
 def angle_to_pwm(angle):
     return int(SERVO_MIN + (SERVO_MAX - SERVO_MIN) * (angle + 90) / 180)
 
 # Initialiser la communication I2C et le contrôleur PCA9685
-i2c = busio.I2C(board.SCL, board.SDA)
+i2c = board.i2c()
 pca = PCA9685(i2c)
 pca.frequency = 50
 

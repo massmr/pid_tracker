@@ -28,6 +28,7 @@ Budget limite : 150€.
 # Installation
 ## Hardware
 Système : Raspberry Pi 3, 4;\
+Controle des moteurs : Module PCA9685;\
 OS : Raspbery Pi OS.
 
 ## Matériel
@@ -59,9 +60,12 @@ git clone git@github.com:massmr/pid_tracker.git
 ## Bibliothèques nécessaires
 - `imutils` : Fournit des fonctions utilitaires pour manipuler les images et simplifier les opérations de traitement d'image avec OpenCV;
 - `opencv-python` : Utilisé pour le traitement d'image, la détection d'objets et d'autres tâches liées à la vision par ordinateur;
+- `adafruit-circuitpython-pca9685`: Utilisé pour le controle des servos via
+protocole PCA9685;
+- `numpy` : Utilisé pour la gestion des matrices après conversion du flux vidéo;
 
 ```bash
-pip install imutils opencv-python
+pip install imutils opencv-python adafruit-circuitpython-pca9685 numpy
 ```
 
 # Utilisation
