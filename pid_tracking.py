@@ -3,7 +3,6 @@ from multiprocessing import Manager, Process
 from imutils.video import VideoStream
 from pyImageSearch.objCenter import ObjCenter
 from pyImageSearch.pid import PID
-#import pantilthat as pth
 import board
 import busio
 from adafruit_pca9685 import PCA9685
@@ -123,17 +122,6 @@ def set_servos(pan, tlt):
     signal.signal(signal.SIGINT, signal_handler)
 
     while True:
-        # Convert pan/tilt angles to PWM values
-        #pan_pulse = int(SERVO_MIN + (SERVO_MAX - SERVO_MIN) * (pan.value + 90) / 180)
-        #tilt_pulse = int(SERVO_MIN + (SERVO_MAX - SERVO_MIN) * (tlt.value + 90) / 180)
-        #pan_pulse = max(SERVO_MIN, min(SERVO_MAX, pan_pulse))
-        #tilt_pulse = max(SERVO_MIN, min(SERVO_MAX, tilt_pulse))
-        
-        # Set servo angles
-        #pca.channels[0].duty_cycle = pan_pulse
-        #pca.channels[1].duty_cycle = tilt_pulse
-
-
         # Conversion de l'angle en PWM pour servos
         pan_pulse = int(SERVO_MIN + (SERVO_MAX - SERVO_MIN) * (pan.value + 90) / 180)
         tilt_pulse = int(SERVO_MIN + (SERVO_MAX - SERVO_MIN) * (tlt.value + 90) / 180)
@@ -157,9 +145,6 @@ if __name__ == "__main__":
 
     # Start a manager for managing process-safe variables
     with Manager() as manager:
-        # Enable the servos
-        #pth.servo_enable(1, True)
-        #pth.servo_enable(2, True)
         
         # Set integer values for the object center (x, y)-coordinates
         centerX = manager.Value("i", 0)
@@ -209,7 +194,3 @@ if __name__ == "__main__":
         processPanning.join()
         processTilting.join()
         processSetServos.join()
-        
-        # Disable the servos
-        #pth.servo_enable(1, False)
-        #pth.servo_enable(2, False)

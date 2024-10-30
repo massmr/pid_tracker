@@ -45,7 +45,7 @@ git clone https://github/massmr/pid_tracker.git
 ```bash
 ├── README.md
 ├── haarcascade_frontalface_default.xml
-├── pan_tilt_tracking.py
+├── pid_tracking.py
 └── pyImageSearch
     ├── __init__.py
     ├── __pycache__
@@ -59,16 +59,15 @@ git clone https://github/massmr/pid_tracker.git
 ## Bibliothèques nécessaires
 - `imutils` : Fournit des fonctions utilitaires pour manipuler les images et simplifier les opérations de traitement d'image avec OpenCV;
 - `opencv-python` : Utilisé pour le traitement d'image, la détection d'objets et d'autres tâches liées à la vision par ordinateur;
-- `pantilthat` (optionnel) : si un module Pan-Tilt Hat est utilisé pour contrôler la motorisation du laser. Ici le hat est imprimé "maison", sans PCB, et ne nécessite pas de bibliothèque.
- 
+
 ```bash
-pip install imutils opencv-python pantilthat
+pip install imutils opencv-python
 ```
 
 # Utilisation
 ## Lancement du programme
 ```bash
-python3 pan_tilt_tracking.py [-c !ou! --cascade] [path_to_haar_file]
+python3 pid_tracking.py [-c !ou! --cascade] [path_to_haar_file]
 ```
 
 # Description des fichiers
@@ -122,7 +121,7 @@ Le fichier est utilisé par le script principal pour appliquer la correction de 
 ### Ressources utiles
 https://fr.wikipedia.org/wiki/R%C3%A9gulateur_PID
 
-## pan_tilt_tracking.pyImageSearch
+## pid_tracking.py - main script
 ### Description
 pan_tilt_tracking.py est le script principal du projet qui orchestre le processus complet de suivi de l’objet. Il initialise la caméra, configure les objets de détection et de PID, et met à jour la position des servos pour maintenir l’objet centré en continu.
 
