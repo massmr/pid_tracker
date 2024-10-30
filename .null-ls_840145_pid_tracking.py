@@ -1,8 +1,8 @@
 # Import necessary packages
 from multiprocessing import Manager, Process
 from imutils.video import VideoStream
-from classes.objCenter import ObjCenter
-from classes.pid import PID
+from pyImageSearch.objCenter import ObjCenter
+from pyImageSearch.pid import PID
 import board
 import busio
 from adafruit_pca9685 import PCA9685
@@ -15,7 +15,6 @@ import subprocess
 import numpy as np
 
 # Define the range for the motors
-# PWM is ranged [0, 4095] : 600 = 180°
 SERVO_MIN = 150
 SERVO_MAX = 600
 servoRange = (-90, 90)
@@ -24,10 +23,13 @@ servoRange = (-90, 90)
 def signal_handler(sig, frame):
     # Print a status message
     print("[INFO] You pressed `ctrl + c`! Exiting...")
+    # Disable the servos
+    #pth.servo_enable(1, False)
+    #pth.servo_enable(2, False)
     # Exit
     sys.exit()
 
-# Function to use libcamera-still self-stream without tcp in order to increase velocity
+# Function to use libcamera-still stream without tcp to increase velocity
 def capture_frame(interval=0.2):
     cmd = "libcamera-still -o - --width 640 --height 480 --timeout 1"
     result = subprocess.run(cmd, shell=True, capture_output=True)
@@ -64,7 +66,7 @@ def obj_center(args, objX, objY, centerX, centerY):
         # Grab the frame from the threaded video stream and flip it
         # vertically (since our camera was upside down)
         
-        # If using piCameraV2
+        # For libcamera normal
         #ret, frame = vs.read()
         
         # For video stream
@@ -111,7 +113,7 @@ def in_range(val, start, end):
 
 def set_servos(pan, tlt):
     # Signal trap to handle keyboard interrupt
-    signal.signal(signal.SIGINT, signal_handler)
+    #signal.signal(signal.SIGINT, signal_handler)
     
     # Initialize I2C and PCA9685
     i2c = busio.I2C(board.SCL, board.SDA)
@@ -120,15 +122,15 @@ def set_servos(pan, tlt):
     signal.signal(signal.SIGINT, signal_handler)
 
     while True:
-        # Convert angles to PWM values
+        # Conversion de l'angle en PWM pour servos
         pan_pulse = int(SERVO_MIN + (SERVO_MAX - SERVO_MIN) * (pan.value + 90) / 180)
         tilt_pulse = int(SERVO_MIN + (SERVO_MAX - SERVO_MIN) * (tlt.value + 90) / 180)
 
-        # PWM must is ranged : [0, 4095]
+        # Limiter à la plage de [0, 4095]
         pan_duty_cycle = max(0, min(4095, pan_pulse))
         tilt_duty_cycle = max(0, min(4095, tilt_pulse))
 
-        # Send to servos
+        # Appliquer aux canaux de servo
         pca.channels[0].duty_cycle = pan_duty_cycle
         pca.channels[1].duty_cycle = tilt_duty_cycle
         time.sleep(0.05)
