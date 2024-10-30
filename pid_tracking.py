@@ -135,7 +135,6 @@ def set_servos(pan, tlt):
     except Exception as e:
         print(f"[ERROR] An error occurred: {e}")
     finally:
-        pwm.deinit()
         print("[INFO] PCA9685 PWM stopped")
 
 
