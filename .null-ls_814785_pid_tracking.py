@@ -3,9 +3,11 @@ from multiprocessing import Manager, Process
 from imutils.video import VideoStream
 from classes.objCenter import ObjCenter
 from classes.pid import PID
-import board
-import busio
-from adafruit_pca9685 import PCA9685
+#import board
+#import busio
+import RPi.GPIO as GPIO
+#from adafruit_pca9685 import PCA9685
+from PCA9685 import PCA9685
 import argparse
 import signal
 import time
@@ -18,6 +20,7 @@ import numpy as np
 # PWM is ranged [0, 4095] : 600 = 180°
 #SERVO_MIN = 150
 #SERVO_MAX = 600
+pwm = PCA9685()
 
 # Function to handle keyboard interrupt
 def signal_handler(sig, frame):
@@ -120,7 +123,6 @@ def set_servos(pan, tlt):
     
     # Init servos
     servoRange = (0, 180)
-    pwm = PCA9685()
 
     try:
         pwm.setPWMFreq(50)
@@ -130,6 +132,11 @@ def set_servos(pan, tlt):
                 set_servo_pan(pan.value)
             if in_range(tlt.value, servoRange[0], servoRange[1]):
                 set_servo_tilt(tlt.value)
+    except Exception as e:
+        print(f"[ERROR] An error occurred: {e}")
+    finally:
+        print("[INFO] PCA9685 PWM stopped")
+
 
 # Check to see if this is the main body of execution
 if __name__ == "__main__":
