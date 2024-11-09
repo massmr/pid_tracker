@@ -1,14 +1,10 @@
 # Import necessary packages
 from multiprocessing import Manager, Process
 from imutils.video import VideoStream
-from picamera2 import Picamera2
-from threading import Thread
 from classes.objCenter import ObjCenter
 from classes.pid import PID
-#import board
-#import busio
+from classes.PiCamera2VideoStream import VideoStream
 import RPi.GPIO as GPIO
-#from adafruit_pca9685 import PCA9685
 from PCA9685 import PCA9685
 import argparse
 import signal
@@ -20,97 +16,55 @@ import numpy as np
 
 # Define the range for the motors
 pwm = PCA9685()
-servoRange = (-45, 45)
+servoRangeX = (10, 170)
+ServoRangeZ = (0, 40)
 
 # Function to handle keyboard interrupt
 def signal_handler(sig, frame):
     # Print a status message
     print("[INFO] You pressed `ctrl + c`! Exiting...")
-
     # Turn off servos
     for channel in range(16):
         PCA9685.setPWM(channel, 0, 0)
-
     # Exit
     sys.exit()
-
-class PiCamera2VideoStream:
-    def __init__(self, resolution=(480, 360), framerate=15):
-        self.camera = Picamera2()
-        self.camera.configure(self.camera.create_preview_configuration(main={"size": resolution}))
-        self.camera.start()
-        
-        self.frame = None
-        self.stopped = False
-        
-        # Start a thread to continuously capture frames
-        self.thread = Thread(target=self.update, args=())
-        self.thread.daemon = True
-        self.thread.start()
-
-    def update(self):
-        # Continuously capture frames until stopped
-        while not self.stopped:
-            self.frame = self.camera.capture_array()
-            time.sleep(1 / 15)  # Limit the capture rate to the desired framerate
-
-    def read(self):
-        # Return the latest frame
-        return self.frame
-
-    def stop(self):
-        # Stop the camera and thread
-        self.stopped = True
-        self.thread.join()
-        self.camera.close()
 
 def obj_center(args, objX, objY, centerX, centerY):
     # Signal trap to handle keyboard interrupt
     signal.signal(signal.SIGINT, signal_handler)
-
     # Initialize the VideoStream with a lower resolution and limited FPS
-    vs = PiCamera2VideoStream(resolution=(480, 360), framerate=15)
-
+    vs = VideoStream(resolution=(640, 480), framerate=10)
     # Pre-heat the camera
     time.sleep(2.0)
-
     # Initialize the object center finder
     obj = ObjCenter(args["cascade"])
-    
     # Loop indefinitely
     while True:
-
         # For video stream
         frame  = vs.read()
-        #frame = cv2.flip(frame, 1)
-        
+        frame = cv2.flip(frame, 1)
         # Calculate the center of the frame as this is where we will
         # try to keep the object
         (H, W) = frame.shape[:2]
         centerX.value = W // 2
         centerY.value = H // 2
-        
         # Find the object's location
-        objectLoc = obj.update(frame, (centerX.value, centerY.value))
+        objectLoc = obj.update(frame, (centerX.value, centerY.value)) 
         ((objX.value, objY.value), rect) = objectLoc
-        
         # Extract the bounding box and draw it
         if rect is not None:
             (x, y, w, h) = rect
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        
         # Display the frame to the screen
-        #cv2.imshow("Pan-Tilt Face Tracking", frame)
+        cv2.imshow("Pan-Tilt Face Tracking", frame)
         cv2.waitKey(1)
 
 def pid_process(output, p, i, d, objCoord, centerCoord):
     # Signal trap to handle keyboard interrupt
     signal.signal(signal.SIGINT, signal_handler)
-    
     # Create a PID and initialize it
     p = PID(p.value, i.value, d.value)
     p.initialize()
-    
     # Loop indefinitely
     while True:
         # Calculate the error
@@ -122,26 +76,22 @@ def in_range(val, start, end):
     # Determine the input value is in the supplied range
     return (val >= start and val <= end)
 
-def set_servo_pan(angle):
-    pwm.setRotationAngle(1, angle)
-
-def set_servo_tilt(angle):
-    pwm.setRotationAngle(0, angle)
 
 def set_servos(pan, tlt):
     # Signal trap to handle keyboard interrupt
     signal.signal(signal.SIGINT, signal_handler)
-    
     # Init servos
-
+    pwm.setPWMFreq(50)
     try:
-        pwm.setPWMFreq(50)
-
+        # Check range and set servos
         while True:
-            if in_range(pan.value, servoRange[0], servoRange[1]):
-                set_servo_pan(pan.value)
-            if in_range(tlt.value, servoRange[0], servoRange[1]):
-                set_servo_tilt(tlt.value)
+            # Set servoX - PAN
+            if in_range(pan.value, servoRangeX[0], servoRangeX[1]):
+                pwm.setRotationAngle(1, pan.value)
+            # Set servoZ - TILT
+            if in_range(tlt.value, servoRangeZ[0], servoRangeZ[1]):
+                pwm.setRotationAngle(0, tlt.value)
+    
     except Exception as e:
         print(f"[ERROR] An error occurred: {e}")
     finally:
@@ -168,8 +118,8 @@ if __name__ == "__main__":
         objY = manager.Value("i", 0)
         
         # Pan and tilt values will be managed by independent PIDs
-        pan = manager.Value("i", 0)
-        tlt = manager.Value("i", 0)
+        pan = manager.Value("i", 90)
+        tlt = manager.Value("i", 10)
         
         # Set PID values for panning
         panP = manager.Value("f", 0.09)
@@ -179,7 +129,7 @@ if __name__ == "__main__":
         # Set PID values for tilting
         tiltP = manager.Value("f", 0.11)
         tiltI = manager.Value("f", 0.10)
-        tiltD = manager.Value("f", 0.002)
+        tiltD = manager.Value("f", 0.000)
 
         # We have 4 independent processes
         # 1. objectCenter  - finds/localizes the object
