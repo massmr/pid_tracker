@@ -1,6 +1,8 @@
 # Import necessary packages
 from multiprocessing import Manager, Process
 from imutils.video import VideoStream
+from picamera2 import Picamera2
+from threading import Thread
 from classes.objCenter import ObjCenter
 from classes.pid import PID
 #import board
@@ -18,42 +20,58 @@ import numpy as np
 
 # Define the range for the motors
 pwm = PCA9685()
-servoRange = (-90, 90)
+servoRange = (-45, 45)
 
 # Function to handle keyboard interrupt
 def signal_handler(sig, frame):
     # Print a status message
     print("[INFO] You pressed `ctrl + c`! Exiting...")
+
+    # Turn off servos
+    for channel in range(16):
+        PCA9685.setPWM(channel, 0, 0)
+
     # Exit
     sys.exit()
 
-# Function to use libcamera-still self-stream without tcp in order to increase velocity
-def capture_frame(interval=0.2):
-    cmd = "libcamera-still -o - --width 640 --height 480 --timeout 1"
-    result = subprocess.run(cmd, shell=True, capture_output=True)
-    frame = np.frombuffer(result.stdout, dtype=np.uint8)
-    return cv2.imdecode(frame, cv2.IMREAD_COLOR)
+class PiCamera2VideoStream:
+    def __init__(self, resolution=(480, 360), framerate=15):
+        self.camera = Picamera2()
+        self.camera.configure(self.camera.create_preview_configuration(main={"size": resolution}))
+        self.camera.start()
+        
+        self.frame = None
+        self.stopped = False
+        
+        # Start a thread to continuously capture frames
+        self.thread = Thread(target=self.update, args=())
+        self.thread.daemon = True
+        self.thread.start()
+
+    def update(self):
+        # Continuously capture frames until stopped
+        while not self.stopped:
+            self.frame = self.camera.capture_array()
+            time.sleep(1 / 15)  # Limit the capture rate to the desired framerate
+
+    def read(self):
+        # Return the latest frame
+        return self.frame
+
+    def stop(self):
+        # Stop the camera and thread
+        self.stopped = True
+        self.thread.join()
+        self.camera.close()
 
 def obj_center(args, objX, objY, centerX, centerY):
     # Signal trap to handle keyboard interrupt
     signal.signal(signal.SIGINT, signal_handler)
-    
-    # Start the videostream
-    # For PiCamera v2
-    #vs = cv2.VideoCapture("/dev/video0", cv2.CAP_V4L2)
-    
-    # For TCP video stream
-    #vs = cv2.VideoCapture("tcp://localhost:8554")
-    #if not vs.isOpened():
-    #    print("[ERROR] Unable to open video stream.")
-    #    sys.exit(1)
-    #vs.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-    #vs.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-    
-    # For self webcam
-    #vs = VideoStream(src=0).start()
-    
-    # pre-heat picamera V2
+
+    # Initialize the VideoStream with a lower resolution and limited FPS
+    vs = PiCamera2VideoStream(resolution=(480, 360), framerate=15)
+
+    # Pre-heat the camera
     time.sleep(2.0)
 
     # Initialize the object center finder
@@ -61,15 +79,10 @@ def obj_center(args, objX, objY, centerX, centerY):
     
     # Loop indefinitely
     while True:
-        # Grab the frame from the threaded video stream and flip it
-        # vertically (since our camera was upside down)
-        
-        # If using piCameraV2
-        #ret, frame = vs.read()
-        
+
         # For video stream
-        frame = capture_frame()
-        frame = cv2.flip(frame, 1)
+        frame  = vs.read()
+        #frame = cv2.flip(frame, 1)
         
         # Calculate the center of the frame as this is where we will
         # try to keep the object
@@ -87,7 +100,7 @@ def obj_center(args, objX, objY, centerX, centerY):
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
         
         # Display the frame to the screen
-        cv2.imshow("Pan-Tilt Face Tracking", frame)
+        #cv2.imshow("Pan-Tilt Face Tracking", frame)
         cv2.waitKey(1)
 
 def pid_process(output, p, i, d, objCoord, centerCoord):
@@ -161,7 +174,7 @@ if __name__ == "__main__":
         # Set PID values for panning
         panP = manager.Value("f", 0.09)
         panI = manager.Value("f", 0.08)
-        panD = manager.Value("f", 0.002)
+        panD = manager.Value("f", 0.000)
         
         # Set PID values for tilting
         tiltP = manager.Value("f", 0.11)
