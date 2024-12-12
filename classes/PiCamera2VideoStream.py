@@ -3,7 +3,7 @@ from threading import Thread
 import time
 
 class VideoStream:
-    def __init__(self, resolution=(480, 360), framerate=15):
+    def __init__(self, resolution=(480, 360), framerate=5):
         self.camera = Picamera2()
         self.camera.configure(self.camera.create_preview_configuration(main={"size": resolution}))
         self.camera.start()

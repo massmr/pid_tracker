@@ -25,7 +25,7 @@ class ObjCenter:
             # Iteration over each faces
             for (x, y, w, h) in rects:
                 # Print closest face dimensions
-                print(f"Detected face at ({x}, {y}), width: {w}, height: {h}")
+                #print(f"Detected face at ({x}, {y}), width: {w}, height: {h}")
 
                 # Calculate area of face box
                 area = w * h

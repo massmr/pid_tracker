@@ -13,15 +13,11 @@ import sys
 import cv2
 import subprocess
 import numpy as np
-import os
-
-# Virtual VNC server
-#os.environ['DISPLAY'] = ':1'
 
 # Define the range for the motors
 pwm = PCA9685()
 servoRangeX = (10, 170)
-servoRangeZ = (0, 80)
+servoRangeZ = (0, 40)
 
 # Function to handle keyboard interrupt
 def signal_handler(sig, frame):
@@ -37,7 +33,7 @@ def obj_center(args, objX, objY, centerX, centerY):
     # Signal trap to handle keyboard interrupt
     signal.signal(signal.SIGINT, signal_handler)
     # Initialize the VideoStream with a lower resolution and limited FPS
-    vs = VideoStream(resolution=(620, 480), framerate=24)
+    vs = VideoStream(resolution=(640, 480), framerate=10)
     # Pre-heat the camera
     time.sleep(2.0)
     # Initialize the object center finder
@@ -52,6 +48,8 @@ def obj_center(args, objX, objY, centerX, centerY):
         (H, W) = frame.shape[:2]
         centerX.value = W // 2
         centerY.value = H // 2
+        #print(f"center x : ", centerX.value)
+        #print(f"center Z : ", centerY.value)
         # Find the object's location
         objectLoc = obj.update(frame, (centerX.value, centerY.value)) 
         ((objX.value, objY.value), rect) = objectLoc
@@ -63,7 +61,7 @@ def obj_center(args, objX, objY, centerX, centerY):
         cv2.imshow("Pan-Tilt Face Tracking", frame)
         cv2.waitKey(1)
 
-def pid_process(isPan, output, p, i, d, objCoord, centerCoord):
+def pid_process(output, p, i, d, objCoord, centerCoord):
     # Signal trap to handle keyboard interrupt
     signal.signal(signal.SIGINT, signal_handler)
     # Create a PID and initialize it
@@ -73,24 +71,18 @@ def pid_process(isPan, output, p, i, d, objCoord, centerCoord):
     while True:
         # Calculate the error
         error = centerCoord.value - objCoord.value
-        # Update the value - Angles are reversed
-        if isPan:
-            output.value = -(p.update(error)) + 90
-            print(f"value: {output.value}")
-        else: 
-            output.value = -(p.update(error)) + 60
-            print(f"value: {output.value}")
+        # Update the value
+        output.value = -( p.update(error)) + 90
+        print(f"output value : ", output.value)
 
 def in_range(val, start, end):
     # Determine the input value is in the supplied range
-    print(f"start: {start} end: {end} | val: {val} ")
-    if val >= start and val <= end:
-        return val
-    else:
-        print(f"[DEBUG] val is out of range: {val}")
-        return 0
+    return (val >= start and val <= end)
+
 
 def set_servos(pan, tlt):
+    # Debug
+    print("[DEBUG] set_servos function called.")
 
     # Signal trap to handle keyboard interrupt
     signal.signal(signal.SIGINT, signal_handler)
@@ -100,6 +92,10 @@ def set_servos(pan, tlt):
     try:
         # Check range and set servos
         while True:
+            # Debug
+            print(f"pan : ", pan.value)
+            #print(f"tilt : ", tlt.value)
+
             # Set servoX - PAN
             if in_range(pan.value, servoRangeX[0], servoRangeX[1]):
                 pwm.setRotationAngle(1, pan.value)
@@ -108,6 +104,7 @@ def set_servos(pan, tlt):
             if in_range(tlt.value, servoRangeZ[0], servoRangeZ[1]):
                 pwm.setRotationAngle(0, tlt.value)
                 time.sleep(0.1)
+    
     except Exception as e:
         print(f"[ERROR] An error occurred: {e}")
     finally:
@@ -121,11 +118,6 @@ if __name__ == "__main__":
     ap.add_argument("-c", "--cascade", type=str, required=True,
                     help="path to input Haar cascade for face detection")
     args = vars(ap.parse_args())
-    
-    # Pre init camera position
-    pwm.setRotationAngle(1, 90)
-    pwm.setRotationAngle(0, 60)
-    time.sleep(0.1)
 
     # Start a manager for managing process-safe variables
     with Manager() as manager:
@@ -140,17 +132,17 @@ if __name__ == "__main__":
         
         # Pan and tilt values will be managed by independent PIDs
         pan = manager.Value("i", 0)
-        tlt = manager.Value("i", 0)
+        tlt = manager.Value("i", 15)
         
         # Set PID values for panning
-        panP = manager.Value("f", 0.03)
-        panI = manager.Value("f", 0.0002)
-        panD = manager.Value("f", 0.0015)
+        panP = manager.Value("f", 0.025)
+        panI = manager.Value("f", 0.001)
+        panD = manager.Value("f", 0.000)
         
         # Set PID values for tilting
-        tiltP = manager.Value("f", 0.03)
-        tiltI = manager.Value("f", 0.00015)
-        tiltD = manager.Value("f", 0.0005)
+        tiltP = manager.Value("f", 0.05)
+        tiltI = manager.Value("f", 0.0)
+        tiltD = manager.Value("f", 0.000)
 
         # We have 4 independent processes
         # 1. objectCenter  - finds/localizes the object
@@ -162,9 +154,9 @@ if __name__ == "__main__":
         processObjectCenter = Process(target=obj_center,
                                        args=(args, objX, objY, centerX, centerY))
         processPanning = Process(target=pid_process,
-                                  args=(True, pan, panP, panI, panD, objX, centerX))
+                                  args=(pan, panP, panI, panD, objX, centerX))
         processTilting = Process(target=pid_process,
-                                  args=(False, tlt, tiltP, tiltI, tiltD, objY, centerY))
+                                  args=(tlt, tiltP, tiltI, tiltD, objY, centerY))
         processSetServos = Process(target=set_servos, args=(pan, tlt))
         
         # Start all 4 processes
@@ -174,9 +166,9 @@ if __name__ == "__main__":
         print("Starting processPanning...")
         processPanning.start()
         time.sleep(0.1)
-        print("Starting processTilting...")
+        #print("Starting processTilting...")
         processTilting.start()
-        time.sleep(0.1)
+        #time.sleep(0.1)
         print("Starting set_servos process...")
         processSetServos.start()
         time.sleep(0.1)
